@@ -85,6 +85,14 @@ def PrintResults(numberFilter = None):
 			continue
                 print "%s\t%s\t%s\t%s" %(samp, PrintRegions(regions), sample_type, PrintFiles(files))
 
+def ProduceJsonResults(numberFilter = None):
+	import json
+	for samp in SamplesWithMultipleRegions:
+		(sample_type, regions, sequence, files) = SamplesWithMultipleRegions[samp]
+		if numberFilter and len(regions) != numberFilter:
+			continue
+		print json.dumps((sample_type, list(regions), sequence, list(files)))
+
 if __name__ == "__main__":
 	if not os.path.exists(METADATA_PATH):
 		os.makedirs(METADATA_PATH)
@@ -93,7 +101,10 @@ if __name__ == "__main__":
 			print "Error untaring files"
 			exit(1)
 	IterateFiles(BuildSampleDictionaries)
-	print "Sample\tRegions\tType\tIn Files"
-	PrintResults(3)
-	PrintResults(2)
+	if '--json' in sys.argv:
+		ProduceJsonResults()
+	else:
+		print "Sample\tRegions\tType\tIn Files"
+		PrintResults(3)
+		PrintResults(2)
 
