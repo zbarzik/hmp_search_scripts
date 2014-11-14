@@ -82,7 +82,10 @@ def PrintFiles(filesSet):
 def PrintResults(numberFilter = None):
 	for samp in SamplesWithMultipleRegions:
         	(sample_type, regions, sequence, files) = SamplesWithMultipleRegions[samp]
-        	if numberFilter and len(regions) != numberFilter:
+		if not numberFilter:
+			if len(regions) == 1:
+				continue
+		elif len(regions) != numberFilter:
 			continue
                 print "%s\t%s\t%s\t%s" %(samp, PrintRegions(regions), sample_type, PrintFiles(files))
 
@@ -90,7 +93,10 @@ def ProduceJsonResults(numberFilter = None):
 	tmpList = []
 	for samp in SamplesWithMultipleRegions:
 		(sample_type, regions, sequence, files) = SamplesWithMultipleRegions[samp]
-		if numberFilter and len(regions) != numberFilter:
+		if not numberFilter:
+			if len(regions) == 1:
+				continue
+		elif len(regions) != numberFilter:
 			continue
 		tmpList.append((samp, list(regions), sample_type, list(files)))
 	print json.dumps(tmpList)
