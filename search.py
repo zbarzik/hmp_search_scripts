@@ -7,7 +7,8 @@ import sys
 import os
 import re
 
-#indir = '~/Downloads/corrected-metadata-v1'
+METADATA_PATH = './metadata'
+METADATA_TAR = 'metadata.tar'
 Region = set([])
 SampleType = set([])
 Sequence = set([])
@@ -35,7 +36,7 @@ def ShowProgress():
         sys.stderr.write('.')
 	
 def IterateFiles(func):
-	for path, _, filenames in os.walk('.'):
+	for path, _, filenames in os.walk(METADATA_PATH):
 		for fn in filenames:
 			if not fn.endswith('.lmd'):
 				continue
@@ -84,12 +85,12 @@ def PrintResults(numberFilter = None):
 			continue
                 print "%s\t%s\t%s\t%s" %(samp, PrintRegions(regions), sample_type, PrintFiles(files))
 
-#print "Iterating over files to find all possible values..."
-#IterateFiles(CreateValueSets)
-#print "Iterating over files to find samples that had more than one region sequencing..."
-IterateFiles(BuildSampleDictionaries)
-#print "Found %d samples with more than one region" %len(SamplesWithMultipleRegions)
-print "Sample\tRegions\tType"
-PrintResults(3)
-PrintResults(2)
+if __name__ == "__main__":
+	if not os.path.exists(METADATA_PATH):
+		os.makedirs(METADATA_PATH)
+		os.system("tar -xvf %s -C %s" % (METADATA_TAR, METADATA_PATH))
+	IterateFiles(BuildSampleDictionaries)
+	print "Sample\tRegions\tType"
+	PrintResults(3)
+	PrintResults(2)
 
