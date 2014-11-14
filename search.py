@@ -88,9 +88,12 @@ def PrintResults(numberFilter = None):
 if __name__ == "__main__":
 	if not os.path.exists(METADATA_PATH):
 		os.makedirs(METADATA_PATH)
-		os.system("tar -xvf %s -C %s" % (METADATA_TAR, METADATA_PATH))
+		ret = os.system("tar -xf %s -C %s" % (METADATA_TAR, METADATA_PATH))
+		if ret != 0:
+			print "Error untaring files"
+			exit(1)
 	IterateFiles(BuildSampleDictionaries)
-	print "Sample\tRegions\tType"
+	print "Sample\tRegions\tType\tIn Files"
 	PrintResults(3)
 	PrintResults(2)
 
