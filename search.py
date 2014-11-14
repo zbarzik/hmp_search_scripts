@@ -6,6 +6,7 @@ import csv
 import sys
 import os
 import re
+import json
 
 METADATA_PATH = './metadata'
 METADATA_TAR = 'metadata.tar'
@@ -86,12 +87,13 @@ def PrintResults(numberFilter = None):
                 print "%s\t%s\t%s\t%s" %(samp, PrintRegions(regions), sample_type, PrintFiles(files))
 
 def ProduceJsonResults(numberFilter = None):
-	import json
+	tmpList = []
 	for samp in SamplesWithMultipleRegions:
 		(sample_type, regions, sequence, files) = SamplesWithMultipleRegions[samp]
 		if numberFilter and len(regions) != numberFilter:
 			continue
-		print json.dumps((sample_type, list(regions), sequence, list(files)))
+		tmpList.append((samp, list(regions), sample_type, list(files)))
+	print json.dumps(tmpList)
 
 if __name__ == "__main__":
 	if not os.path.exists(METADATA_PATH):
@@ -102,7 +104,7 @@ if __name__ == "__main__":
 			exit(1)
 	IterateFiles(BuildSampleDictionaries)
 	if '--json' in sys.argv:
-		ProduceJsonResults()
+		ProduceJsonResults(3)
 	else:
 		print "Sample\tRegions\tType\tIn Files"
 		PrintResults(3)
