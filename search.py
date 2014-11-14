@@ -30,30 +30,35 @@ def CreateValueSets(sequence, region, sample_type, sample):
 	SampleType.add(sample_type)
 	Sequence.add(sequence)
 	Sample.add(sample)
+
+def ShowProgress():
+        sys.stderr.write('.')
 	
 def IterateFiles(func):
 	for path, _, filenames in os.walk('.'):
 		for fn in filenames:
-			#print fn
 			if not fn.endswith('.lmd'):
 				continue
+			ShowProgress()
 			with open(os.path.join(path, fn),'r') as f:
 	    			reader=csv.reader(f,delimiter='\t')
+				fn_nosuffix = fn[:-4]
 	    			for arg0, arg1, arg2, arg3, sequence, arg4, arg5, region, arg6, arg7, arg8, sample_type, sample in reader:
-					func(sequence, region, sample_type, sample)
+					func(sequence, region, sample_type, sample, fn_nosuffix)
 
-def BuildSampleDictionaries(sequence, region, sample_type, sample):
+def BuildSampleDictionaries(sequence, region, sample_type, sample, filename):
         if sample_type == "water blank" or sample_type == "positive control":
                 return
 	if SampleRegions.has_key(sample) and SampleRegions[sample][0] != sample_type:
 		raise Exception("Probably a bug - sample %s had sample_type %s but now found sample_type %s" % (sample, SampleRegions[sample][0], sample_type))
 	if SampleRegions.has_key(sample) and not AreRegionsTheSame(SampleRegions[sample][1], region):
 		regions = set([ SampleRegions[sample][1], region ])
+		files = set([ SampleRegions[sample][3], filename ])
 		if SamplesWithMultipleRegions.has_key(sample):
 			regions = regions | SamplesWithMultipleRegions[sample][1]
-		SamplesWithMultipleRegions.update({sample:(sample_type, regions, sequence)})
-        
-	SampleRegions.update({sample:(sample_type, region, sequence)})
+			files = files | SamplesWithMultipleRegions[sample][3] 	
+		SamplesWithMultipleRegions.update({sample:(sample_type, regions, sequence, files)})
+	SampleRegions.update({sample:(sample_type, region, sequence, filename)})
 	
 def PrintRegions(regionSet):
 	output = ""
@@ -64,14 +69,20 @@ def PrintRegions(regionSet):
 			output = output + "V1-V3, "
 		else:
 			output = output + reg + ", "
-	return output[:len(output) - 2]
+	return output[:-2]
 	
+def PrintFiles(filesSet):
+	output = ""
+	for fn in filesSet:
+		output = output + fn + ', '
+	return output[:-2]
+
 def PrintResults(numberFilter = None):
 	for samp in SamplesWithMultipleRegions:
-        	(sample_type, regions, sequence) = SamplesWithMultipleRegions[samp]
+        	(sample_type, regions, sequence, files) = SamplesWithMultipleRegions[samp]
         	if numberFilter and len(regions) != numberFilter:
 			continue
-                print "%s\t%s\t%s" %(samp, PrintRegions(regions), sample_type)
+                print "%s\t%s\t%s\t%s" %(samp, PrintRegions(regions), sample_type, PrintFiles(files))
 
 #print "Iterating over files to find all possible values..."
 #IterateFiles(CreateValueSets)
