@@ -110,7 +110,7 @@ if __name__ == "__main__":
 			exit(1)
 	IterateFiles(BuildSampleDictionaries)
 	if '--json' in sys.argv:
-		ProduceJsonResults(3)
+		ProduceJsonResults()
 	else:
 		print "Sample\tRegions\tType\tIn Files"
 		PrintResults(3)
