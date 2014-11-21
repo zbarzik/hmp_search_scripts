@@ -6,25 +6,32 @@ import sys
 import shutil
 
 DATA_PATH = '../data/'
+FILE_SUFFIX = '.sff'
 
 def FindFile(name, path):
         for root, dirs, files in os.walk(path):
                 if name in files:
                         return os.path.join(root, name)
-        raise Exception("Not found!")
+		else:
+			for directory in dirs:
+				trytofind = FindFile(name, directory)
+				if trytofind:
+					return trytofind
+				 
+	return None
 
 def AddSingleFileToSampleDir(filename, region, sample):
-        full_fn = ""
-        try:
-                full_fn = FindPath(filename + '.sff', DATA_PATH)
-        except:
-                print "File %s not found" % full_fn
+	print "Searching for %s..." % filename
+        full_fn = FindPath(filename + FILE_SUFFIX, DATA_PATH)
+        if not full_fn:
+                print "File %s.%s not found" % (filename, FILE_SUFFIX)
                 return
         directory = DATA_PATH + sample + "_" + region + "_files"
         print directory
         if not os.path.exists(directory):
-                print "creating dir"
+                print "Creating dir %s" % directory
                 os.makedirs(directory)
+	print "Copying %s to %s..." % (full_fn, directory)
         shutil.copy(full_fn, directory)
 
 if __name__ == "__main__":
@@ -36,9 +43,11 @@ if __name__ == "__main__":
         except:
                 print "Usage: %s -j <json file>" % os.path.basename(__file__)
                 exit(1)
+	print "Parsing json..."
         json_data=open(sys.argv[index + 1])
         samples = json.load(json_data)
         json_data.close()
+	print "Done parsing."
         for samp in samples:
                 files = samp[3]
                 for fn in files:
