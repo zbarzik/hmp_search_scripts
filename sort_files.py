@@ -13,9 +13,9 @@ def FindFile(name, path):
                         return os.path.join(root, name)
         raise Exception("Not found!")
 
-def AddSingleFileToSampleDir(filename, sample):
+def AddSingleFileToSampleDir(filename, region, sample):
         full_fn = filename + '.sff'
-        directory = DATA_PATH + sample + "_files"
+        directory = DATA_PATH + sample + "_" + region + "_files"
         print directory
         if not os.path.exists(directory):
                 print "creating dir"
@@ -26,9 +26,7 @@ if __name__ == "__main__":
         index = 0
         try:
                 index = sys.argv.index('-j')
-                print index
-                if index == len(sys.argv):
-                        print "index == len"
+                if index >= len(sys.argv):
                         raise
         except:
                 print "Usage: %s -j <json file>" % os.path.basename(__file__)
@@ -40,4 +38,4 @@ if __name__ == "__main__":
                 files = samp[3]
                 for fn in files:
                         print(fn)
-                        AddSingleFileToSampleDir(fn, samp[0])
+                        AddSingleFileToSampleDir(fn[0], fn[1], samp[0])

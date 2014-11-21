@@ -23,7 +23,6 @@ def AreRegionsTheSame(region1, region2):
 	digSet1 = set(digits1)
 	digSet2 = set(digits2)
 	return len(digSet1 & digSet2) == 2
-	
 
 def CreateValueSets(sequence, region, sample_type, sample):
 	if sample_type == "water blank" or sample_type == "positive control":
@@ -55,28 +54,31 @@ def BuildSampleDictionaries(sequence, region, sample_type, sample, filename):
 		raise Exception("Probably a bug - sample %s had sample_type %s but now found sample_type %s" % (sample, SampleRegions[sample][0], sample_type))
 	if SampleRegions.has_key(sample) and not AreRegionsTheSame(SampleRegions[sample][1], region):
 		regions = set([ SampleRegions[sample][1], region ])
-		files = set([ SampleRegions[sample][3], filename ])
+		files = set([ SampleRegions[sample][3], (filename, GetRegionString(region)) ])
 		if SamplesWithMultipleRegions.has_key(sample):
 			regions = regions | SamplesWithMultipleRegions[sample][1]
 			files = files | SamplesWithMultipleRegions[sample][3] 	
 		SamplesWithMultipleRegions.update({sample:(sample_type, regions, sequence, files)})
-	SampleRegions.update({sample:(sample_type, region, sequence, filename)})
+	SampleRegions.update({sample:(sample_type, region, sequence, (filename, GetRegionString(region)))})
+
+def GetRegionString(region):
+	if region.upper()=="V5-V3":
+		return "V3-V5"
+	elif region.upper()=="V3-V1":
+		return "V1-V3"
+	else:
+		return region
 	
 def PrintRegions(regionSet):
 	output = ""
 	for reg in regionSet:
-		if reg=="V5-V3":
-			output = output + "V3-V5, "
-		elif reg=="V3-V1":
-			output = output + "V1-V3, "
-		else:
-			output = output + reg + ", "
+		output = output + GetRegionString(reg) + ", "
 	return output[:-2]
 	
 def PrintFiles(filesSet):
 	output = ""
-	for fn in filesSet:
-		output = output + fn + ', '
+	for fn_tup in filesSet:
+		output = output + fn_tup[0] + "(" + fn_tup[1] + ")" + ', '
 	return output[:-2]
 
 def PrintResults(numberFilter = None):
