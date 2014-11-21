@@ -22,14 +22,13 @@ def FindFile(name, path):
 
 def AddSingleFileToSampleDir(filename, region, sample):
 	print "Searching for %s..." % filename
-        full_fn = FindPath(filename + FILE_SUFFIX, DATA_PATH)
+        full_fn = FindFile(filename + FILE_SUFFIX, DATA_PATH)
         if not full_fn:
                 print "File %s.%s not found" % (filename, FILE_SUFFIX)
                 return
         directory = DATA_PATH + sample + "_" + region + "_files"
-        print directory
         if not os.path.exists(directory):
-                print "Creating dir %s" % directory
+                print "Creating dir %s..." % directory
                 os.makedirs(directory)
 	print "Copying %s to %s..." % (full_fn, directory)
         shutil.copy(full_fn, directory)
@@ -51,5 +50,4 @@ if __name__ == "__main__":
         for samp in samples:
                 files = samp[3]
                 for fn in files:
-                        print(fn)
                         AddSingleFileToSampleDir(fn[0], fn[1], samp[0])
