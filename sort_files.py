@@ -15,6 +15,11 @@ def FindFile(name, path):
 
 def AddSingleFileToSampleDir(filename, region, sample):
         full_fn = filename + '.sff'
+	try:
+		FindFile(full_fn)
+	except:
+		print "File %s not found" % full_fn
+		return
         directory = DATA_PATH + sample + "_" + region + "_files"
         print directory
         if not os.path.exists(directory):
