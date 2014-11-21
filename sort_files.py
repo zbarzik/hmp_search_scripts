@@ -14,18 +14,18 @@ def FindFile(name, path):
         raise Exception("Not found!")
 
 def AddSingleFileToSampleDir(filename, region, sample):
-        full_fn = filename + '.sff'
-	try:
-		FindFile(full_fn)
-	except:
-		print "File %s not found" % full_fn
-		return
+        full_fn = ""
+        try:
+                full_fn = FindPath(filename + '.sff', DATA_PATH)
+        except:
+                print "File %s not found" % full_fn
+                return
         directory = DATA_PATH + sample + "_" + region + "_files"
         print directory
         if not os.path.exists(directory):
                 print "creating dir"
                 os.makedirs(directory)
-        shutil.copy(FindFile(full_fn, DATA_PATH), directory)
+        shutil.copy(full_fn, directory)
 
 if __name__ == "__main__":
         index = 0
