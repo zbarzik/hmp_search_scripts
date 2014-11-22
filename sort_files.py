@@ -9,22 +9,27 @@ DATA_PATH = '../data/'
 FILE_SUFFIX = '.sff'
 
 def FindFile(name, path):
-        for root, dirs, files in os.walk(path):
-                if name in files:
-                        return os.path.join(root, name)
-		else:
-			for directory in dirs:
-				trytofind = FindFile(name, directory)
-				if trytofind:
+        if os.path.isfile(os.path.join(path, name)):
+                return os.path.join(path, name)
+        else:  
+                for root, dirs, _ in os.walk(path):
+                        for dirname in dirs:
+                                if name.startswith(dirname):
+                                        trytofind = FindFile(name, os.path.join(root, dirname))
+                                        if trytofind:
+                                                return trytofind
+                        for dirname in dirs:
+                        	trytofind = FindFile(name, os.path.join(root, dirname))
+                                if trytofind:
 					return trytofind
-				 
-	return None
+
+        return None
 
 def AddSingleFileToSampleDir(filename, region, sample):
 	print "Searching for %s..." % filename
         full_fn = FindFile(filename + FILE_SUFFIX, DATA_PATH)
         if not full_fn:
-                print "File %s.%s not found" % (filename, FILE_SUFFIX)
+                print "File %s%s not found" % (filename, FILE_SUFFIX)
                 return
         directory = DATA_PATH + sample + "_" + region + "_files"
         if not os.path.exists(directory):
