@@ -30,8 +30,8 @@ def AddSingleFileToSampleDir(filename, region, sample):
         if not os.path.exists(directory):
                 print "Creating dir %s..." % directory
                 os.makedirs(directory)
-	print "Copying %s to %s..." % (full_fn, directory)
-        shutil.copy(full_fn, directory)
+	print "Linking %s to %s..." % (full_fn, directory)
+        os.symlink(full_fn, directory + '/' + filename + FILE_SUFFIX)
 
 if __name__ == "__main__":
         index = 0
