@@ -42,7 +42,10 @@ def AddSingleFileToSampleDir(filename, region, sample):
                 print "Creating dir %s..." % directory
                 os.makedirs(directory)
 	print "Linking %s to %s..." % (full_fn, directory)
-        os.symlink(full_fn, directory + '/' + filename + FILE_SUFFIX)
+	try:
+		os.symlink(full_fn, directory + '/' + filename + FILE_SUFFIX)
+	except:
+		print "Cant create symlink"
 
 if __name__ == "__main__":
         index = 0
