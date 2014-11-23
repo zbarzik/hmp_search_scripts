@@ -7,6 +7,8 @@ import shutil
 
 DATA_PATH = '../data/'
 FILE_SUFFIX = '.sff'
+MissingFiles = []
+
 
 def FindFile(name, path):
         if os.path.isfile(os.path.join(path, name)):
@@ -26,10 +28,14 @@ def FindFile(name, path):
         return None
 
 def AddSingleFileToSampleDir(filename, region, sample):
+	if filename in MissingFiles:
+		print "Skipping %s" % filename
+		return
 	print "Searching for %s..." % filename
         full_fn = FindFile(filename + FILE_SUFFIX, DATA_PATH)
         if not full_fn:
                 print "File %s%s not found" % (filename, FILE_SUFFIX)
+		MissingFiles.append(filename)
                 return
         directory = DATA_PATH + sample + "_" + region + "_files"
         if not os.path.exists(directory):
