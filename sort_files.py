@@ -45,7 +45,7 @@ def AddSingleFileToSampleDir(filename, region, sample):
 	try:
 		os.symlink(full_fn, directory + '/' + filename + FILE_SUFFIX)
 	except:
-		print "Cant create symlink"
+		print "Can't create symlink"
 
 if __name__ == "__main__":
         index = 0

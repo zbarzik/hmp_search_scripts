@@ -46,8 +46,8 @@ def IterateFiles(func):
 			with open(os.path.join(path, fn),'r') as f:
 	    			reader=csv.reader(f,delimiter='\t')
 				fn_nosuffix = fn[:-4]
-				for (filename, arg1, arg2, arg3, sequence, arg4, arg5, region, arg6, arg7, arg8, sample_type, sample) in reader:
-					func(sequence, region, sample_type, sample, filename)
+				for (filename, experiment, arg2, arg3, sequence, arg4, arg5, region, arg6, arg7, arg8, sample_type, sample) in reader:
+					func(sequence, region, sample_type, experiment, filename)
 
 def BuildSampleDictionaries(sequence, region, sample_type, sample, filename):
 	if filename == "NULL" or sample_type == "water blank" or sample_type == "positive control":
