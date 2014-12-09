@@ -44,7 +44,7 @@ def AddSingleFileToSampleDir(filename, region, sample):
                 os.makedirs(directory)
 	print "Copying %s to %s..." % (full_fn, directory)
 	try:
-		os.copy(full_fn, directory + '/' + filename + FILE_SUFFIX)
+		shutil.copy2(full_fn, directory + '/' + filename + FILE_SUFFIX)
 	except:
 		print "Copy %s failed" % full_fn
 
