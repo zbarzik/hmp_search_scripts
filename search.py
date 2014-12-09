@@ -50,13 +50,14 @@ def IterateFiles(func):
 					func(sequence, region, sample_type, sequenced_sample, filename)
 
 def BuildSampleDictionaries(sequence, region, sample_type, sample, filename):
+	region = GetRegionString(region)
 	if filename == "NULL" or sample_type == "water blank" or sample_type == "positive control":
 		return
 	fileRegionTupple = (filename, GetRegionString(region))
 	if SampleRegions.has_key(sample):
 		if SampleRegions[sample][0] != sample_type:
 			raise Exception("%s has %s instead of %s" %(sample, SampleRegions[sample][0], sample_type))
-		regions = set([ SampleRegions[sample][1],  region ])
+		regions = set([ SampleRegions[sample][1], region ])
 		files = set([ (SampleRegions[sample][3], SampleRegions[sample][1]), fileRegionTupple ])
 		if SamplesWithMultipleRegions.has_key(sample):
 			regions = regions | SamplesWithMultipleRegions[sample][1]
