@@ -46,15 +46,16 @@ def IterateFiles(func):
 			with open(os.path.join(path, fn),'r') as f:
 	    			reader=csv.reader(f,delimiter='\t')
 				fn_nosuffix = fn[:-4]
-				for (filename, experiment, arg2, arg3, sequence, arg4, arg5, region, arg6, arg7, arg8, sample_type, sample) in reader:
-					func(sequence, region, sample_type, experiment, filename)
+				for (filename, experiment, arg2, arg3, sequence, arg4, arg5, region, arg6, sequenced_sample, arg8, sample_type, id_of_sort) in reader:
+					func(sequence, region, sample_type, sequenced_sample, filename)
 
 def BuildSampleDictionaries(sequence, region, sample_type, sample, filename):
 	if filename == "NULL" or sample_type == "water blank" or sample_type == "positive control":
 		return
 	fileRegionTupple = (filename, GetRegionString(region))
 	if SampleRegions.has_key(sample):
-		assert SampleRegions[sample][0] == sample_type
+		if SampleRegions[sample][0] != sample_type:
+			raise Exception("%s has %s instead of %s" %(sample, SampleRegions[sample][0], sample_type))
 		regions = set([ SampleRegions[sample][1],  region ])
 		files = set([ (SampleRegions[sample][3], SampleRegions[sample][1]), fileRegionTupple ])
 		if SamplesWithMultipleRegions.has_key(sample):
