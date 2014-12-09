@@ -6,6 +6,7 @@ import sys
 import shutil
 
 DATA_PATH = '../data/'
+DEST_PATH = DATA_PATH + "sorted/"
 FILE_SUFFIX = '.sff'
 MissingFiles = []
 
@@ -37,15 +38,15 @@ def AddSingleFileToSampleDir(filename, region, sample):
                 print "File %s%s not found" % (filename, FILE_SUFFIX)
 		MissingFiles.append(filename)
                 return
-        directory = DATA_PATH + sample + "_" + region + "_files"
+        directory = DEST_PATH + sample + "_" + region + "_files"
         if not os.path.exists(directory):
                 print "Creating dir %s..." % directory
                 os.makedirs(directory)
-	print "Linking %s to %s..." % (full_fn, directory)
+	print "Copying %s to %s..." % (full_fn, directory)
 	try:
-		os.symlink(full_fn, directory + '/' + filename + FILE_SUFFIX)
+		os.copy(full_fn, directory + '/' + filename + FILE_SUFFIX)
 	except:
-		print "Can't create symlink"
+		print "Copy %s failed" % full_fn
 
 if __name__ == "__main__":
         index = 0
