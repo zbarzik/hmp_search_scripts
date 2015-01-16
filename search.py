@@ -67,13 +67,12 @@ def BuildSampleDictionaries(sequence, region, sample_type, sample, filename):
 		SampleRegions.update({sample:(sample_type, region, sequence, filename)})
 
 def GetRegionString(region):
-	return region
-	#if region.upper()=="V5-V3":
-	#	return "V3-V5"
-	#elif region.upper()=="V3-V1":
-	#	return "V1-V3"
-	#else:
-	#	return region
+	if region.upper()=="V5-V3":
+		return "V3-V5"
+	elif region.upper()=="V3-V1":
+		return "V1-V3"
+	else:
+		return region
 	
 def PrintRegions(regionSet):
 	output = ""
