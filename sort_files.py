@@ -6,7 +6,7 @@ import sys
 import shutil
 
 DATA_PATH = '../data/'
-DEST_PATH = DATA_PATH + "sorted/"
+DEST_PATH = '../sorted_data/'
 FILE_SUFFIX = '.sff'
 MissingFiles = []
 
@@ -22,7 +22,7 @@ def FindFile(name, path):
                                         if trytofind:
                                                 return trytofind
                         for dirname in dirs:
-                        	trytofind = FindFile(name, os.path.join(root, dirname))
+				trytofind = FindFile(name, os.path.join(root, dirname))
                                 if trytofind:
 					return trytofind
 
@@ -34,19 +34,32 @@ def AddSingleFileToSampleDir(filename, region, sample):
 		return
 	print "Searching for %s..." % filename
         full_fn = FindFile(filename + FILE_SUFFIX, DATA_PATH)
+	already_moved = False
         if not full_fn:
-                print "File %s%s not found" % (filename, FILE_SUFFIX)
-		MissingFiles.append(filename)
-                return
+		full_fn = FindFile(filename + FILE_SUFFIX, DEST_PATH)
+		if not full_fn:
+			print "File %s%s not found" % (filename, FILE_SUFFIX)
+			MissingFiles.append(filename)
+			return
+		already_moved = True
+
         directory = DEST_PATH + sample + "_" + region + "_files"
         if not os.path.exists(directory):
                 print "Creating dir %s..." % directory
                 os.makedirs(directory)
-	print "Copying %s to %s..." % (full_fn, directory)
-	try:
-		shutil.copy2(full_fn, directory + '/' + filename + FILE_SUFFIX)
-	except:
-		print "Copy %s failed" % full_fn
+	if not already_moved:
+		print "Moving %s to %s..." % (full_fn, directory)
+		try:
+			shutil.move(full_fn, directory + '/' + filename + FILE_SUFFIX)
+		except:
+			print "Move %s to %s failed" % (full_fn,directory)
+	else:
+                print "Copying %s to %s..." % (full_fn, directory)
+                try:
+                        shutil.copy(full_fn, directory + '/' + filename + FILE_SUFFIX)
+                except:
+                        print "Copy %s to %s failed" % (full_fn,directory)
+
 
 if __name__ == "__main__":
         index = 0
