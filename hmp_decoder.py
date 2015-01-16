@@ -110,7 +110,7 @@ def ProduceJsonResults(numberFilter = None):
 	print json.dumps(tmpList)
 	sys.stderr.write('\n')
 
-if __name__ == "__main__":
+def SearchMetadata(json = False):
 	if not os.path.exists(METADATA_PATH):
 		os.makedirs(METADATA_PATH)
 		ret = os.system("tar -xf %s -C %s" % (METADATA_TAR, METADATA_PATH))
@@ -118,10 +118,12 @@ if __name__ == "__main__":
 			print "Error untaring files"
 			exit(1)
 	IterateFiles(BuildSampleDictionaries)
-	if '--json' in sys.argv:
+	if json:
 		ProduceJsonResults()
 	else:
 		print "Sample\tRegions\tType\tIn Files"
 		PrintResults(3)
 		PrintResults(2)
 
+if __name__ == "__main__":
+	SearchMetadata(json='--json' in sys.argv)
