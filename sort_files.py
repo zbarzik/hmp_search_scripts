@@ -19,11 +19,11 @@ def FindFile(name, path):
                         for dirname in dirs:
                                 if name.startswith(dirname):
                                         trytofind = FindFile(name, os.path.join(root, dirname))
-                                        if trytofind:
+                                        if trytofind != None:
                                                 return trytofind
                         for dirname in dirs:
 				trytofind = FindFile(name, os.path.join(root, dirname))
-                                if trytofind:
+                                if trytofind != None:
 					return trytofind
 
         return None
