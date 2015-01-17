@@ -10,7 +10,7 @@ import json
 
 METADATA_PATH = './metadata'
 METADATA_TAR = 'metadata.tar'
-IGNORE_SAMPLE_TYPES = { "water blank", "positive control" }
+IGNORE_SAMPLE_TYPES = [ "water blank", "positive control" ]
 Region = set([])
 SampleType = set([])
 Sequence = set([])
