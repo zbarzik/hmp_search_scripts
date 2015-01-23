@@ -11,12 +11,14 @@ import json
 METADATA_PATH = './metadata'
 METADATA_TAR = 'metadata.tar'
 IGNORE_SAMPLE_TYPES = [ "water blank", "positive control" ]
+IGNORE_FILENAMES = [ 'SRR058115', 'SRR042815', 'SRR046214', 'SRR052699', 'SRR058087', 'SRR058086', 'SRR058085', 'SRR058084', 'SRR057663', 'SRR057609', 'SRR058120', 'SRR058089', 'SRR058088', 'SRR058107', 'SRR058108', 'SRR058109', 'SRR042796', 'SRR058098', 'SRR047551', 'SRR058090', 'SRR058091', 'SRR058092', 'SRR058093', 'SRR058094', 'SRR058095', 'SRR058096', 'SRR058097', 'SRR058114', 'SRR058111', 'SRR045646', 'SRR058113', 'SRR058112']
 Region = set([])
 SampleType = set([])
 Sequence = set([])
 Sample = set([])
 SampleRegions = {}
 SamplesWithMultipleRegions = {}
+
 
 def AreRegionsTheSame(region1, region2):
 	digits1 = map(int, re.findall(r'\d+', region1))
@@ -65,7 +67,7 @@ def BuildSampleDictionaries(sequence, region, sample_type, sample, filename):
         SEQUENCE_IDX = 2
         FILE_IDX = 3
 	region = GetRegionString(region)
-	if filename == "NULL" or sample_type in IGNORE_SAMPLE_TYPES:
+	if filename == "NULL" or sample_type in IGNORE_SAMPLE_TYPES or filename in IGNORE_FILENAMES:
 		return
 	fileRegionTupple = (filename, GetRegionString(region))
 	if SampleRegions.has_key(sample):
